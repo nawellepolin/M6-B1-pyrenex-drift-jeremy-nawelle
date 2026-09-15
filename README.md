@@ -104,6 +104,28 @@ Concrètement :
 - **La tâche 1 ne déplace aucun fichier.** Elle demande une décision **écrite dans ce
   README** : lequel de vos deux jeux M5-B2 servira à la boucle de B2, et pourquoi.
 
+### 🎯 Décision — jeu de référence retenu pour la boucle B2
+
+Nous disposons de deux jeux M5-B2, tous deux à 500 lignes avec golden run
+et seuils hybrides (absolu + relatif, tolérances ≥ 2σ bootstrap) :
+
+| | Jeremy | Nawelle |
+|---|---|---|
+| Composition | 350/150 (70/30) | 250/250 (50/50) |
+| Golden run F1 macro | 0.6342 | 0.6517 |
+| Reproductibilité du bruit | `scripts/measure_bootstrap_noise.py` | idem |
+
+**Retenu : le jeu de Jeremy (70/30, 500 lignes, repo `m6-b1`).** Une
+composition équilibrée à 250/250 comme celle de Nawelle est justement
+l'exemple cité par le brief comme risque de faux garde-fou (« un garde-fou
+calé sur un jeu équilibré 250/250 bloquerait une release parfaitement
+saine ») : ce n'est pas disqualifiant en soi tant que golden run et seuils
+sont mesurés sur le même jeu, mais c'est le choix le plus exposé à cette
+critique. Le 70/30 réduit déjà le bruit sur le recall d'environ 30 %
+(150 positifs vs ~92 en tirage naturel à 18,4 %) tout en restant plus
+proche de la prévalence réelle — un compromis plus défendable pour le même
+bénéfice recherché.
+
 ---
 
 ## 🚀 Démarrage
