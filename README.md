@@ -155,8 +155,28 @@ Les **données sont fournies** dans `data/` : `reference_set.csv` (baseline),
 | 4 | Diagnostic data vs concept drift | `diagnostic.md` | `02` |
 | 5 | Logique de remédiation | `src/recommendations.py` | `02`, `04` |
 | 6 | Note de recommandation | `note_recommandation_TEMPLATE.md` | `04` |
-| 7 | Extension dashboard Grafana (3 panels **live**) | `grafana/provisioning/dashboards/pyrenex_drift_TEMPLATE.json` | `05` |
+| 7 | Extension dashboard Grafana (3 panels **live**) | `grafana/provisioning/dashboards/pyrenex_drift.json` | `05` |
 | 7⭐ | *(option)* publier le PSI à Prometheus sans nouveau service | `metrics/psi.prom` + compose + `prometheus.yml` | `05` |
+
+### Pourquoi PSI, KS, Chi² et le F1 à 12 semaines ne sont pas dans Grafana
+
+Ce sont des **mesures batch** : elles comparent le témoin `reference_set.csv`
+(1500 lignes) à `prod_3months.csv` sur toute la fenêtre, un calcul ponctuel
+lancé depuis le notebook — aucun service de la stack M5 ne les recalcule en
+continu ni ne les expose sur `/metrics`. Le dashboard, lui, n'affiche que ce
+que le service `model` calcule réellement à chaque requête (probabilités
+prédites, classe prédite, volume, erreurs HTTP) : c'est la différence entre
+un **diagnostic ponctuel** (notebook) et un **suivi en continu** (Grafana).
+
+### Dashboard Grafana — `pyrenex_drift.json`
+
+Testé en conditions réelles sur la stack M5 (`docker compose up`, 500
+requêtes de `prod_3months.csv` envoyées à `/score`) avant d'être copié ici :
+les 3 panels renvoient des données dès le démarrage, aucun `No data`.
+
+- **Probabilités prédites (médiane / p90)** — `pyrenex_prediction_proba` (histogramme du service `model`)
+- **Part des dossiers prédits en défaut** — `pyrenex_predictions_total`, ratio classe 1 / total
+- **Volume et taux d'erreur** — `http_requests_total` (`model` + `backend`), scrape Prometheus exclu du volume
 
 ## ⭐ Extension (non notée, si socle bouclé) — dater la dérive
 

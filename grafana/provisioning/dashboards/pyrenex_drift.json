@@ -17,7 +17,7 @@
   "panels": [
     {
       "id": 1,
-      "title": "Comportement — probabilites predites (mediane / p90)",
+      "title": "Comportement — probabilités prédites (médiane / p90)",
       "type": "timeseries",
       "gridPos": {
         "h": 8,
@@ -25,7 +25,7 @@
         "x": 0,
         "y": 0
       },
-      "description": "Le modele hesite-t-il plus qu'avant ? Histogram expose par le service model (M5) : passer par _bucket + rate() + histogram_quantile().",
+      "description": "Le modèle hésite-t-il plus qu'avant ? Histogramme exposé par le service model (M5) : _bucket + rate() + histogram_quantile().",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
@@ -36,6 +36,18 @@
         },
         "overrides": []
       },
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
       "targets": [
         {
           "refId": "A",
@@ -44,7 +56,7 @@
             "uid": "prometheus"
           },
           "expr": "histogram_quantile(0.5, sum(rate(pyrenex_prediction_proba_bucket[5m])) by (le))",
-          "legendFormat": "mediane"
+          "legendFormat": "médiane"
         },
         {
           "refId": "B",
@@ -59,7 +71,7 @@
     },
     {
       "id": 2,
-      "title": "Comportement — part des dossiers predits en defaut",
+      "title": "Comportement — part des dossiers prédits en défaut",
       "type": "timeseries",
       "gridPos": {
         "h": 8,
@@ -67,16 +79,30 @@
         "x": 12,
         "y": 0
       },
-      "description": "La proportion de defauts annonces a-t-elle bouge ? Compteur pyrenex_predictions_total (M5), labelle par classe predite.",
+      "description": "La proportion de défauts annoncés a-t-elle bougé ? Compteur pyrenex_predictions_total (M5), labellé par classe prédite.",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
       },
       "fieldConfig": {
         "defaults": {
-          "unit": "percentunit"
+          "unit": "percentunit",
+          "min": 0,
+          "max": 1
         },
         "overrides": []
+      },
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
       },
       "targets": [
         {
@@ -100,7 +126,7 @@
         "x": 0,
         "y": 8
       },
-      "description": "Y a-t-il assez de trafic pour conclure ? Une bascule de distribution sur 3 requetes ne veut rien dire.",
+      "description": "Y a-t-il assez de trafic pour conclure ? Une bascule de distribution sur 3 requêtes ne veut rien dire. Le volume exclut le scrape Prometheus lui-même (/metrics, /health).",
       "datasource": {
         "type": "prometheus",
         "uid": "prometheus"
@@ -111,6 +137,18 @@
         },
         "overrides": []
       },
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "single",
+          "sort": "none"
+        }
+      },
       "targets": [
         {
           "refId": "A",
@@ -118,7 +156,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(rate(http_requests_total{job=~\"model|backend\"}[5m]))",
+          "expr": "sum(rate(http_requests_total{job=~\"model|backend\", handler!~\"/metrics|/health\"}[5m]))",
           "legendFormat": "RPS total"
         },
         {
@@ -127,7 +165,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(rate(http_requests_total{job=~\"model|backend\",status=~\"4..|5..\"}[5m])) or vector(0)",
+          "expr": "sum(rate(http_requests_total{job=~\"model|backend\", handler!~\"/metrics|/health\", status=~\"4..|5..\"}[5m])) or vector(0)",
           "legendFormat": "erreurs 4xx/5xx"
         }
       ]
