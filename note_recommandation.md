@@ -71,4 +71,4 @@ de calibration qu'un recalibrage cible directement, à un dixième du coût.
 
 *Note produite par le binôme Jeremy & Nawelle, dans le cadre du brief M6-B1
 Pyrenex Crédit. Détail des calculs : `diagnostic.md`, `drift_summary.md`,
-`notebooks/M6-B1_template.ipynb`.*
+`notebooks/M6-B1_binome_drift_analysis.ipynb`.*
