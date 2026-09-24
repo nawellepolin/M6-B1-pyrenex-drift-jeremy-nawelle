@@ -63,7 +63,7 @@ Ce diagnostic correspond exactement au cas de référence du mini-cours 02 :
 
 ## Méthode
 
-Calculs reproductibles dans `notebooks/M6-B1_template.ipynb` (sections 2 à
+Calculs reproductibles dans `notebooks/M6-B1_binome_drift_analysis.ipynb` (sections 2 à
 5), fonctions dans `src/drift_detection.py`, `src/calibration.py`,
 `src/recommendations.py`. Détail feature par feature : `drift_summary.md`.
 
